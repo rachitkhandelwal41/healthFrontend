@@ -8,13 +8,21 @@ A comprehensive healthcare management system built with Angular 20, featuring ro
 **Angular 20.3.0** - Modern web framework with standalone components
 **TypeScript 5.9.2** - Type-safe JavaScript development
 **TailwindCSS 4.1.14** - Utility-first CSS framework
-**RxJS 7.8.0** - Reactive programming for async operations
-**ngx-toastr 19.1.0** - Toast notifications for user feedback
 
-### Development Tools
-**Angular CLI 20.3.4** - Command-line interface for Angular development
-**Jasmine & Karma** - Unit testing framework
-**Prettier** - Code formatting with Angular-specific configurations
+## Screen Shots
+
+### Admin Dashboard
+<img width="1512" height="831" alt="Screenshot 2025-10-05 at 6 40 33 PM" src="https://github.com/user-attachments/assets/59d12633-3037-435b-92f2-77093a8cb868" />
+<img width="676" height="582" alt="Screenshot 2025-10-05 at 6 40 48 PM" src="https://github.com/user-attachments/assets/5c3485d6-e631-49e9-8c6c-db76ce8cf886" />
+
+### Doctor Dashboard
+<img width="1512" height="830" alt="Screenshot 2025-10-05 at 6 42 03 PM" src="https://github.com/user-attachments/assets/5641bc52-9429-4efe-acaf-6727cc5a6aec" />
+<img width="1512" height="831" alt="Screenshot 2025-10-05 at 6 42 12 PM" src="https://github.com/user-attachments/assets/6e0c005c-7928-4b88-b621-2daa6ae37de1" />
+<img width="1512" height="833" alt="Screenshot 2025-10-05 at 6 42 24 PM" src="https://github.com/user-attachments/assets/5140dfe4-f3b5-4c64-9680-a8dffb1bed5d" />
+
+### Patient Dashboard
+<img width="1289" height="747" alt="Screenshot 2025-10-05 at 6 44 20 PM" src="https://github.com/user-attachments/assets/e64159f4-30bf-4547-b2be-d233920db59e" />
+<img width="1290" height="769" alt="Screenshot 2025-10-05 at 6 45 02 PM" src="https://github.com/user-attachments/assets/607ff398-f7c8-49e3-93a7-66309f275843" />
 
 ## API Endpoints
 
@@ -168,12 +176,6 @@ ng serve
 
 # Build for production
 ng build
-
-# Run unit tests
-ng test
-
-# Code scaffolding
-ng generate component component-name
 ```
 
 ## Future Course Work
@@ -240,18 +242,10 @@ src/
 └── main.ts                  # Application entry point
 ```
 
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
-
 ## License
 
 This project is licensed under the MIT License.
 
 ## Support
 
-For support and questions, please open an issue in the repository or contact the development team.
+For support and questions, please open an issue in the repository.
