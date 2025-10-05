@@ -41,7 +41,7 @@ export class AuthService {
       withCredentials: true // Important for cookies
     }).pipe(
       tap(response => {
-        console.log('Signup response:', response);
+        // console.log('Signup response:', response);
         // Persist role
         if (response.role) this.setUserRole(response.role);
         // Persist user object when available
@@ -95,7 +95,7 @@ export class AuthService {
     try {
       localStorage.setItem(this.USER_KEY, JSON.stringify(user));
     } catch {
-      console.log('Error setting user:', user);
+      // console.log('Error setting user:', user);
     }
   }
 }

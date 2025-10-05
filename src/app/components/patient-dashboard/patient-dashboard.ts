@@ -23,8 +23,8 @@ export class PatientDashboardComponent implements OnInit {
   myAppointments: AppointmentWithDoctorName[] = [];
   allDoctors: Doctor[] = [];
 
-  selectedDepartment: string = '';
-  selectedDate: string = '';
+  selectedDepartment: string = 'Neurology';
+  selectedDate: string = '2025-08-11';
   selectedDoctor: Doctor | null = null;
   selectedSlot: number | null = null;
 
@@ -84,15 +84,21 @@ export class PatientDashboardComponent implements OnInit {
   }
 
   setMinDate(): void {
-    const today = new Date();
-    this.selectedDate = today.toISOString().split('T')[0];
+    // Default date is already set to 2025-08-10, no need to override with today's date
+    // const today = new Date();
+    // this.selectedDate = today.toISOString().split('T')[0];
   }
 
   loadDepartments(): void {
     this.bookingService.getDepartments().subscribe({
       next: (departments) => {
         this.departments = departments;
-        console.log('Departments loaded:', departments);
+        // console.log('Departments loaded:', departments);
+
+        // Auto-search doctors once departments are loaded and we have defaults
+        if (this.selectedDepartment && this.selectedDate) {
+          this.searchDoctors();
+        }
       },
       error: (err) => {
         console.error('Error loading departments:', err);
@@ -124,16 +130,16 @@ export class PatientDashboardComponent implements OnInit {
     this.error = '';
     this.doctors = [];
 
-    console.log('Searching doctors:', {
-      department: this.selectedDepartment,
-      date: this.selectedDate
-    });
+    // console.log('Searching doctors:', {
+    //   department: this.selectedDepartment,
+    //   date: this.selectedDate
+    // });
 
     this.bookingService.getAvailableDoctors(this.selectedDepartment, this.selectedDate).subscribe({
       next: (doctors) => {
         this.loadingDoctors = false;
         this.doctors = doctors;
-        console.log('Doctors loaded:', doctors);
+        // console.log('Doctors loaded:', doctors);
 
         if (this.doctors.length === 0) {
           this.error = 'No doctors available for selected department and date. Try a different date or department.';
@@ -174,12 +180,12 @@ export class PatientDashboardComponent implements OnInit {
 
     const doctorId = this.selectedDoctor.doctor_id || this.selectedDoctor._id;
 
-    console.log('Booking appointment:', {
-      doctorId,
-      patientId: this.patientId,
-      date: this.selectedDate,
-      slot: this.selectedSlot
-    });
+    // console.log('Booking appointment:', {
+    //   doctorId,
+    //   patientId: this.patientId,
+    //   date: this.selectedDate,
+    //   slot: this.selectedSlot
+    // });
 
     this.bookingService.bookAppointment(
       doctorId!,
@@ -189,7 +195,7 @@ export class PatientDashboardComponent implements OnInit {
     ).subscribe({
       next: (response) => {
         this.loading = false;
-        console.log('Booking response:', response);
+        // console.log('Booking response:', response);
 
         if (response.success) {
           this.success = 'Appointment booked successfully!';
@@ -221,7 +227,7 @@ export class PatientDashboardComponent implements OnInit {
   loadMyAppointments(): void {
     if (!this.patientId) return;
 
-    console.log('Loading appointments for patient:', this.patientId);
+    // console.log('Loading appointments for patient:', this.patientId);
 
     this.bookingService.getMyAppointments(this.patientId).subscribe({
       next: (appointments) => {
@@ -232,7 +238,7 @@ export class PatientDashboardComponent implements OnInit {
           }
           return { ...appt, name: doc ? doc.name : undefined };
         });
-        console.log('Appointments loaded:', appointments);
+        // console.log('Appointments loaded:', appointments);
       },
       error: (err) => {
         console.error('Error loading appointments:', err);
@@ -250,12 +256,12 @@ export class PatientDashboardComponent implements OnInit {
     this.error = '';
     this.success = '';
 
-    console.log('Cancelling appointment:', appointmentId);
+    // console.log('Cancelling appointment:', appointmentId);
 
     this.bookingService.cancelAppointment(appointmentId).subscribe({
       next: (response) => {
         this.loading = false;
-        console.log('Cancel response:', response);
+        // console.log('Cancel response:', response);
 
         if (response.success) {
           this.success = 'Appointment cancelled successfully';

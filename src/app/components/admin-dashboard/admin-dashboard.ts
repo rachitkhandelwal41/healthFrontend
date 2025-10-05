@@ -63,7 +63,7 @@ export class AdminDashboardComponent implements OnInit {
     this.isLoading = true;
     this.departmentService.getAllDepartments().subscribe({
       next: (data) => {
-        console.log('Departments response:', data); // Debug log
+        // console.log('Departments response:', data); // Debug log
         this.departments = data;
         this.isLoading = false;
       },
@@ -79,7 +79,7 @@ export class AdminDashboardComponent implements OnInit {
     this.isLoading = true;
     this.doctorService.getAllDoctors().subscribe({
       next: (data) => {
-        console.log('Loaded doctors:', data);
+        // console.log('Loaded doctors:', data);
         this.doctors = data;
         this.isLoading = false;
       },
