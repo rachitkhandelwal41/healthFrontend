@@ -47,7 +47,12 @@ export class SigninComponent {
     this.authService.login(this.email, this.password).subscribe({
       next: (response) => {
         this.isLoading = false;
-        
+
+        // Ensure user is persisted even if backend didn't include full payload
+        if (!response.user) {
+          this.authService.setUser({ email: this.email, role: response.role });
+        }
+
         // Navigate based on role
         switch (response.role) {
           case 'DOCTOR':

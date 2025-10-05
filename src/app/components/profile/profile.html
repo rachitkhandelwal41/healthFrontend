@@ -1,0 +1,17 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+  <div class="bg-white rounded-lg shadow-md p-8 max-w-md w-full">
+    <h2 class="text-2xl font-bold text-gray-800 mb-4">Profile</h2>
+    <div class="mb-4">
+      <span class="block text-gray-600 font-medium">Name:</span>
+      <span class="block text-gray-800">{{ user.name || 'N/A' }}</span>
+    </div>
+    <div class="mb-4">
+      <span class="block text-gray-600 font-medium">Email:</span>
+      <span class="block text-gray-800">{{ user.email || 'N/A' }}</span>
+    </div>
+    <div class="mb-4">
+      <span class="block text-gray-600 font-medium">Role:</span>
+      <span class="block text-gray-800 uppercase">{{ user.role || 'N/A' }}</span>
+    </div>
+  </div>
+</div>

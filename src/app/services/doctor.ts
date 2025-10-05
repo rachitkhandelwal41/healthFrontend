@@ -10,7 +10,7 @@ import { Doctor, CreateDoctorRequest, UpdateDoctorRequest, DoctorResponse } from
   providedIn: 'root'
 })
 export class DoctorService {
-  private baseUrl = 'https://healthcare-backend-eight.vercel.app/api/v1';
+  private baseUrl = 'http://localhost:1331/api/v1';
 
   constructor(private http: HttpClient) {}
 

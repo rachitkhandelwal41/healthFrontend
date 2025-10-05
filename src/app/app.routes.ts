@@ -6,6 +6,7 @@ import { SignupComponent } from './components/signup/signup';
 import { DoctorDashboardComponent } from './components/doctor-dashboard/doctor-dashboard';
 import { PatientDashboardComponent } from './components/patient-dashboard/patient-dashboard';
 import { AdminDashboardComponent } from './components/admin-dashboard/admin-dashboard';
+import { Profile } from './components/profile/profile';
 import { authGuard } from './guards/auth';
 
 export const routes: Routes = [
@@ -39,6 +40,11 @@ export const routes: Routes = [
     component: AdminDashboardComponent,
     canActivate: [authGuard],
     data: { role: 'ADMIN' }
+  },
+  {
+    path: 'profile',
+    loadComponent: () => import('./components/profile/profile').then(m => m.Profile),
+    canActivate: [authGuard]
   },
   {
     path: '**',

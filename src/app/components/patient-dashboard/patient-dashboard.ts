@@ -3,6 +3,8 @@ import { BookingService, Department, Doctor, Appointment } from './../../service
 import { DoctorService } from './../../services/doctor';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth';
 
 // Extend Appointment for local use
 interface AppointmentWithDoctorName extends Appointment {
@@ -31,6 +33,7 @@ export class PatientDashboardComponent implements OnInit {
   loadingDoctors = false;
   error = '';
   success = '';
+  showProfileMenu = false;
 
   slots = [
     { value: 0, time: '9:00 AM' },
@@ -45,7 +48,7 @@ export class PatientDashboardComponent implements OnInit {
 
   activeTab: 'book' | 'appointments' = 'book';
 
-  constructor(private bookingService: BookingService, private doctorService: DoctorService) {}
+  constructor(private bookingService: BookingService, private doctorService: DoctorService, private router: Router, private authService: AuthService) {}
 
   ngOnInit(): void {
     // Get patientId from localStorage or auth service
@@ -281,5 +284,23 @@ export class PatientDashboardComponent implements OnInit {
   getSlotTime(slot: number): string {
     const slotObj = this.slots.find(s => s.value === slot);
     return slotObj ? slotObj.time : '';
+  }
+
+  toggleProfileMenu(): void {
+    this.showProfileMenu = !this.showProfileMenu;
+  }
+
+  closeProfileMenu(): void {
+    this.showProfileMenu = false;
+  }
+
+  goToProfile(): void {
+    this.closeProfileMenu();
+    this.router.navigate(['/profile']);
+  }
+
+  logout(): void {
+    this.closeProfileMenu();
+    this.authService.logout();
   }
 }

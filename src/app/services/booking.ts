@@ -41,7 +41,7 @@ export interface ApiResponse<T> {
   providedIn: 'root'
 })
 export class BookingService {
-  private baseUrl = 'https://healthcare-backend-eight.vercel.app/api/v1';
+  private baseUrl = 'http://localhost:1331/api/v1';
 
   constructor(private http: HttpClient) {}
 
@@ -62,10 +62,15 @@ export class BookingService {
   }
 
   getAvailableDoctors(specialization?: string, date?: string): Observable<Doctor[]> {
-    let url = `${this.baseUrl}/patient/available`;
-    if (specialization) url += `specialization=${encodeURIComponent(specialization)}&`;
-    if (date) url += `date=${date}`;
-    
+    const queryParts: string[] = [];
+    if (specialization) {
+      queryParts.push(`specialization=${encodeURIComponent(specialization)}`);
+    }
+    if (date) {
+      queryParts.push(`date=${encodeURIComponent(date)}`);
+    }
+    const url = `${this.baseUrl}/doctors/available${queryParts.length ? `?${queryParts.join('&')}` : ''}`;
+
     return this.http.get<any>(url, {
       withCredentials: true
     }).pipe(
@@ -87,7 +92,7 @@ export class BookingService {
 
   bookAppointment(doctorId: string, patientId: string, date: string, slot: number): Observable<ApiResponse<Appointment>> {
     return this.http.post<ApiResponse<Appointment>>(
-      `${this.baseUrl}/patient/book`,
+      `${this.baseUrl}/appointments/book`,
       {
         doctor_id: doctorId,
         patient_id: patientId,
@@ -99,7 +104,7 @@ export class BookingService {
   }
 
   getMyAppointments(patientId: string): Observable<Appointment[]> {
-    return this.http.get<any>(`${this.baseUrl}/patient/appointments/${patientId}`, {
+    return this.http.get<any>(`${this.baseUrl}/appointments/${patientId}`, {
       withCredentials: true
     }).pipe(
       map(response => {
@@ -116,7 +121,7 @@ export class BookingService {
 
   cancelAppointment(appointmentId: string): Observable<ApiResponse<any>> {
     return this.http.patch<ApiResponse<any>>(
-      `${this.baseUrl}/patient/appointments/${appointmentId}/cancel`,
+      `${this.baseUrl}/appointments/${appointmentId}/cancel`,
       {},
       { withCredentials: true }
     );

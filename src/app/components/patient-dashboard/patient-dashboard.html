@@ -1,9 +1,26 @@
 <div class="min-h-screen bg-gray-50 p-4">
   <div class="max-w-7xl mx-auto">
     <!-- Header -->
-    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-      <h1 class="text-3xl font-bold text-gray-800">Patient Dashboard</h1>
-      <p class="text-gray-600 mt-2">Book and manage your appointments</p>
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6 flex items-center justify-between relative">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-800">Patient Dashboard</h1>
+        <p class="text-gray-600 mt-2">Book and manage your appointments</p>
+      </div>
+      <div class="relative">
+        <button (click)="toggleProfileMenu()" class="focus:outline-none group">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Profile icon">
+            <circle cx="32" cy="32" r="30" fill="#ffffff" stroke="#2b6cb0" stroke-width="2"/>
+            <circle cx="32" cy="24" r="10" fill="#2b6cb0"/>
+            <path d="M16 50c0-8 7-14 16-14s16 6 16 14" fill="#2b6cb0"/>
+          </svg>
+
+        </button>
+        <div *ngIf="showProfileMenu" class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50 animate-fadeIn">
+          <button (click)="goToProfile()" class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">Profile</button>
+          <button (click)="logout()" class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">Logout</button>
+        </div>
+        <div *ngIf="showProfileMenu" (click)="closeProfileMenu()" class="fixed inset-0 z-40"></div>
+      </div>
     </div>
 
     <!-- Alert Messages -->
@@ -18,7 +35,7 @@
     <div class="bg-white rounded-lg shadow-md mb-6">
       <div class="border-b border-gray-200">
         <div class="flex">
-          <button 
+          <button
             (click)="switchTab('book')"
             [class.border-b-2]="activeTab === 'book'"
             [class.border-blue-500]="activeTab === 'book'"
@@ -26,7 +43,7 @@
             class="px-6 py-3 font-medium text-gray-600 hover:text-blue-600">
             Book Appointment
           </button>
-          <button 
+          <button
             (click)="switchTab('appointments')"
             [class.border-b-2]="activeTab === 'appointments'"
             [class.border-blue-500]="activeTab === 'appointments'"
@@ -43,8 +60,8 @@
           <!-- Department Selection -->
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Department</label>
-            <select 
-              [(ngModel)]="selectedDepartment" 
+            <select
+              [(ngModel)]="selectedDepartment"
               (change)="onDepartmentChange()"
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
               <option value="">Select Department</option>
@@ -57,8 +74,8 @@
           <!-- Date Selection -->
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Date</label>
-            <input 
-              type="date" 
+            <input
+              type="date"
               [(ngModel)]="selectedDate"
               (change)="onDateChange()"
               [min]="selectedDate"
@@ -75,7 +92,7 @@
         <div *ngIf="!loading && doctors.length > 0" class="mb-6">
           <h3 class="text-xl font-semibold text-gray-800 mb-4">Available Doctors</h3>
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div 
+            <div
               *ngFor="let doctor of doctors"
               (click)="selectDoctor(doctor)"
               [class.ring-2]="selectedDoctor?.doctor_id === doctor.doctor_id"
@@ -106,7 +123,7 @@
 
         <!-- Book Button -->
         <div *ngIf="selectedDoctor && selectedSlot !== null">
-          <button 
+          <button
             (click)="bookAppointment()"
             [disabled]="loading"
             class="w-full md:w-auto bg-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed">
@@ -118,13 +135,13 @@
       <!-- My Appointments Tab -->
       <div *ngIf="activeTab === 'appointments'" class="p-6">
         <h3 class="text-xl font-semibold text-gray-800 mb-4">My Appointments</h3>
-        
+
         <div *ngIf="myAppointments.length === 0" class="text-center py-8 text-gray-500">
           No appointments found
         </div>
 
         <div class="space-y-4">
-          <div 
+          <div
             *ngFor="let appointment of myAppointments"
             class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
             <div class="flex justify-between items-start">
@@ -143,7 +160,7 @@
                 </div>
                 <div class="flex items-center gap-2">
                   <span class="font-semibold text-gray-800">Status:</span>
-                  <span 
+                  <span
                     [class.text-green-600]="appointment.status === 'BOOKED'"
                     [class.text-red-600]="appointment.status === 'CANCELLED'"
                     class="font-medium">
@@ -151,7 +168,7 @@
                   </span>
                 </div>
               </div>
-              
+
               <button
                 *ngIf="appointment.status === 'BOOKED'"
                 (click)="cancelAppointment(appointment._id)"
