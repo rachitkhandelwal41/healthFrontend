@@ -1,7 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { BookingService, Department, Doctor, Appointment } from './../../services/booking';
+import { DoctorService } from './../../services/doctor';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+
+// Extend Appointment for local use
+interface AppointmentWithDoctorName extends Appointment {
+  doctorName?: string;
+}
 
 @Component({
   selector: 'app-patient-dashboard',
@@ -12,19 +18,20 @@ import { CommonModule } from '@angular/common';
 export class PatientDashboardComponent implements OnInit {
   departments: Department[] = [];
   doctors: Doctor[] = [];
-  myAppointments: Appointment[] = [];
-  
+  myAppointments: AppointmentWithDoctorName[] = [];
+  allDoctors: Doctor[] = [];
+
   selectedDepartment: string = '';
   selectedDate: string = '';
   selectedDoctor: Doctor | null = null;
   selectedSlot: number | null = null;
-  
+
   patientId: string = '';
   loading = false;
   loadingDoctors = false;
   error = '';
   success = '';
-  
+
   slots = [
     { value: 0, time: '9:00 AM' },
     { value: 1, time: '10:00 AM' },
@@ -38,21 +45,39 @@ export class PatientDashboardComponent implements OnInit {
 
   activeTab: 'book' | 'appointments' = 'book';
 
-  constructor(private bookingService: BookingService) {}
+  constructor(private bookingService: BookingService, private doctorService: DoctorService) {}
 
   ngOnInit(): void {
     // Get patientId from localStorage or auth service
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     this.patientId = user.userId || user._id || user.id;
-    
+
     if (!this.patientId) {
       this.error = 'Please login to continue';
       return;
     }
-    
+
     this.loadDepartments();
-    this.loadMyAppointments();
     this.setMinDate();
+    // Fetch all doctors for mapping
+    this.doctorService.getAllDoctors().subscribe({
+      next: (doctors) => {
+        // Map to BookingService.Doctor shape
+        this.allDoctors = doctors.map((d: any) => ({
+          doctor_id: d._id || d.doctor_id,
+          _id: d._id || d.doctor_id,
+          name: d.name,
+          specialization: d.specialization,
+          department: d.deptName || d.department,
+          availability: d.availability
+        }));
+        this.loadMyAppointments();
+      },
+      error: (err) => {
+        this.error = 'Failed to load doctors for appointments';
+        this.loadMyAppointments(); // Still try to load appointments
+      }
+    });
   }
 
   setMinDate(): void {
@@ -78,7 +103,7 @@ export class PatientDashboardComponent implements OnInit {
     this.selectedDoctor = null;
     this.selectedSlot = null;
     this.error = '';
-    
+
     if (this.selectedDepartment && this.selectedDate) {
       this.searchDoctors();
     }
@@ -95,18 +120,18 @@ export class PatientDashboardComponent implements OnInit {
     this.loadingDoctors = true;
     this.error = '';
     this.doctors = [];
-    
+
     console.log('Searching doctors:', {
       department: this.selectedDepartment,
       date: this.selectedDate
     });
-    
+
     this.bookingService.getAvailableDoctors(this.selectedDepartment, this.selectedDate).subscribe({
       next: (doctors) => {
         this.loadingDoctors = false;
         this.doctors = doctors;
         console.log('Doctors loaded:', doctors);
-        
+
         if (this.doctors.length === 0) {
           this.error = 'No doctors available for selected department and date';
         }
@@ -145,7 +170,7 @@ export class PatientDashboardComponent implements OnInit {
     this.success = '';
 
     const doctorId = this.selectedDoctor.doctor_id || this.selectedDoctor._id;
-    
+
     console.log('Booking appointment:', {
       doctorId,
       patientId: this.patientId,
@@ -162,12 +187,12 @@ export class PatientDashboardComponent implements OnInit {
       next: (response) => {
         this.loading = false;
         console.log('Booking response:', response);
-        
+
         if (response.success) {
           this.success = 'Appointment booked successfully!';
           this.loadMyAppointments();
           this.resetBookingForm();
-          
+
           setTimeout(() => {
             this.success = '';
             this.switchTab('appointments');
@@ -192,16 +217,21 @@ export class PatientDashboardComponent implements OnInit {
 
   loadMyAppointments(): void {
     if (!this.patientId) return;
-    
+
     console.log('Loading appointments for patient:', this.patientId);
-    
+
     this.bookingService.getMyAppointments(this.patientId).subscribe({
       next: (appointments) => {
-        this.myAppointments = appointments;
+        // Map doctorName onto each appointment
+        this.myAppointments = appointments.map(appt => {
+          const doc = this.allDoctors.find(d => d._id === appt.doctorId || d.doctor_id === appt.doctorId);
+          return { ...appt, doctorName: doc ? doc.name : undefined };
+        });
         console.log('Appointments loaded:', appointments);
       },
       error: (err) => {
         console.error('Error loading appointments:', err);
+        this.error = 'Failed to load appointments';
       }
     });
   }
@@ -214,14 +244,14 @@ export class PatientDashboardComponent implements OnInit {
     this.loading = true;
     this.error = '';
     this.success = '';
-    
+
     console.log('Cancelling appointment:', appointmentId);
 
     this.bookingService.cancelAppointment(appointmentId).subscribe({
       next: (response) => {
         this.loading = false;
         console.log('Cancel response:', response);
-        
+
         if (response.success) {
           this.success = 'Appointment cancelled successfully';
           this.loadMyAppointments();
@@ -242,7 +272,7 @@ export class PatientDashboardComponent implements OnInit {
     this.activeTab = tab;
     this.error = '';
     this.success = '';
-    
+
     if (tab === 'appointments') {
       this.loadMyAppointments();
     }
