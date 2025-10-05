@@ -17,10 +17,16 @@ Backend Url - https://github.com/HriGrit/FullStack_MEAN_Backend
 <img width="1512" height="831" alt="Screenshot 2025-10-05 at 6 40 33 PM" src="https://github.com/user-attachments/assets/59d12633-3037-435b-92f2-77093a8cb868" />
 <img width="676" height="582" alt="Screenshot 2025-10-05 at 6 40 48 PM" src="https://github.com/user-attachments/assets/5c3485d6-e631-49e9-8c6c-db76ce8cf886" />
 
+Username: h@gmail.com
+Password: Rachit@123
+
 ### Doctor Dashboard
 <img width="1512" height="830" alt="Screenshot 2025-10-05 at 6 42 03 PM" src="https://github.com/user-attachments/assets/5641bc52-9429-4efe-acaf-6727cc5a6aec" />
 <img width="1512" height="831" alt="Screenshot 2025-10-05 at 6 42 12 PM" src="https://github.com/user-attachments/assets/6e0c005c-7928-4b88-b621-2daa6ae37de1" />
 <img width="1512" height="833" alt="Screenshot 2025-10-05 at 6 42 24 PM" src="https://github.com/user-attachments/assets/5140dfe4-f3b5-4c64-9680-a8dffb1bed5d" />
+
+Username: gg@gamil.com
+Password: Rachit@123
 
 ### Patient Dashboard
 <img width="1289" height="747" alt="Screenshot 2025-10-05 at 6 44 20 PM" src="https://github.com/user-attachments/assets/e64159f4-30bf-4547-b2be-d233920db59e" />
