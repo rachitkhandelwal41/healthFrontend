@@ -59,4 +59,38 @@ export class DoctorService {
       withCredentials: true
     });
   }
+
+  // Fetch all patients for minimal listing in doctor dashboard
+  getAllPatients(): Observable<any[]> {
+    return this.http.get<any>(`${this.baseUrl}/patient`, {
+      withCredentials: true
+    }).pipe(
+      map(response => {
+        if (response && Array.isArray(response.data)) {
+          return response.data;
+        }
+        if (Array.isArray(response)) {
+          return response;
+        }
+        return [];
+      })
+    );
+  }
+
+  // Fetch all appointments related to the logged-in doctor
+  getDoctorAppointments(): Observable<any[]> {
+    return this.http.get<any>(`${this.baseUrl}/doctors/appointment`, {
+      withCredentials: true
+    }).pipe(
+      map(response => {
+        if (response && Array.isArray(response.data)) {
+          return response.data;
+        }
+        if (Array.isArray(response)) {
+          return response;
+        }
+        return [];
+      })
+    );
+  }
 }

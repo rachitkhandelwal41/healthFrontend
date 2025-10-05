@@ -17,24 +17,24 @@
       </div>
 
       <nav class="space-y-2">
-        <a href="#" class="flex items-center px-4 py-3 text-gray-700 bg-blue-50 rounded-lg">
+        <button (click)="selectTab('overview')" [class.bg-blue-50]="activeTab==='overview'" class="w-full text-left flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-gray-50">
           <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
           </svg>
           Overview
-        </a>
-        <a href="#" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+        </button>
+        <button (click)="selectTab('patients')" [class.bg-blue-50]="activeTab==='patients'" class="w-full text-left flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
           <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
           </svg>
           Patients
-        </a>
-        <a href="#" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+        </button>
+        <button (click)="selectTab('appointments')" [class.bg-blue-50]="activeTab==='appointments'" class="w-full text-left flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
           <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
           </svg>
           Appointments
-        </a>
+        </button>
         <a href="#" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
           <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
@@ -57,13 +57,13 @@
   <!-- Main Content -->
   <main class="flex-1 p-8">
     <!-- Header -->
-    <div class="mb-8">
+    <div class="mb-8" *ngIf="activeTab==='overview'">
       <h1 class="text-3xl font-bold text-gray-900">Welcome, Doctor</h1>
       <p class="text-gray-600 mt-2">Here's what's happening with your patients today</p>
     </div>
 
     <!-- Stats Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div *ngIf="activeTab==='overview'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
       <!-- Total Patients -->
       <div class="bg-white rounded-xl shadow p-6">
         <div class="flex items-center justify-between mb-4">
@@ -117,8 +117,8 @@
       </div>
     </div>
 
-    <!-- Recent Appointments -->
-    <div class="bg-white rounded-xl shadow">
+    <!-- Recent Appointments (Overview) -->
+    <div *ngIf="activeTab==='overview'" class="bg-white rounded-xl shadow">
       <div class="p-6 border-b border-gray-200">
         <h2 class="text-xl font-bold text-gray-900">Today's Appointments</h2>
       </div>
@@ -177,5 +177,49 @@
         </div>
       </div>
     </div>
+
+    <!-- Patients Tab -->
+    <section *ngIf="activeTab==='patients'" class="space-y-4">
+      <h2 class="text-xl font-bold text-gray-900 mb-4">Patients</h2>
+      <div *ngIf="patientsLoading" class="text-gray-600">Loading patients...</div>
+      <div *ngIf="!patientsLoading && patients.length===0" class="text-gray-500">No patients found.</div>
+      <ul *ngIf="!patientsLoading && patients.length>0" class="divide-y divide-gray-200 bg-white rounded-xl shadow">
+        <li *ngFor="let p of patients" class="p-4 flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-semibold">
+              {{ (p.name || p.fullName || p.email || 'U').slice(0,2).toUpperCase() }}
+            </div>
+            <div>
+              <div class="font-medium text-gray-900">{{ p.name || p.fullName || 'Unknown' }}</div>
+              <div class="text-sm text-gray-500">{{ p.email || p.phone || '' }}</div>
+            </div>
+          </div>
+          <div class="text-sm text-gray-500">{{ p._id || p.id || p.userId }}</div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Appointments Tab -->
+    <section *ngIf="activeTab==='appointments'" class="space-y-4">
+      <h2 class="text-xl font-bold text-gray-900 mb-4">Appointments</h2>
+      <div *ngIf="appointmentsLoading" class="text-gray-600">Loading appointments...</div>
+      <div *ngIf="!appointmentsLoading && appointments.length===0" class="text-gray-500">No appointments found.</div>
+      <ul *ngIf="!appointmentsLoading && appointments.length>0" class="divide-y divide-gray-200 bg-white rounded-xl shadow">
+        <li *ngFor="let a of appointments" class="p-4 flex items-center justify-between">
+          <div>
+            <div class="font-medium text-gray-900">{{ a.patient?.user?.name || a.patientName || 'Patient' }}</div>
+            <div class="text-sm text-gray-500">{{ a.date || a.createdAt | date:'mediumDate' }} • Slot {{ a.slot || a.time || '' }}</div>
+          </div>
+          <span class="px-3 py-1 text-xs font-medium rounded-full"
+            [ngClass]="{
+              'bg-green-100 text-green-700': (a.status || '').toLowerCase() === 'confirmed',
+              'bg-yellow-100 text-yellow-700': (a.status || '').toLowerCase() === 'pending',
+              'bg-gray-100 text-gray-700': (a.status || '').toLowerCase() !== 'confirmed' && (a.status || '').toLowerCase() !== 'pending'
+            }">
+            {{ a.status || 'N/A' }}
+          </span>
+        </li>
+      </ul>
+    </section>
   </main>
 </div>
