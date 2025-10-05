@@ -16,7 +16,7 @@
 
         </button>
         <div *ngIf="showProfileMenu" class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50 animate-fadeIn">
-          <button (click)="goToProfile()" class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">Profile</button>
+          <!-- <button (click)="goToProfile()" class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">Profile</button> -->
           <button (click)="logout()" class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">Logout</button>
         </div>
         <div *ngIf="showProfileMenu" (click)="closeProfileMenu()" class="fixed inset-0 z-40"></div>

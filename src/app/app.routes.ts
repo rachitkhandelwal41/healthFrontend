@@ -41,11 +41,11 @@ export const routes: Routes = [
     canActivate: [authGuard],
     data: { role: 'ADMIN' }
   },
-  {
-    path: 'profile',
-    loadComponent: () => import('./components/profile/profile').then(m => m.Profile),
-    canActivate: [authGuard]
-  },
+  // {
+  //   path: 'profile',
+  //   loadComponent: () => import('./components/profile/profile').then(m => m.Profile),
+  //   canActivate: [authGuard]
+  // },
   {
     path: '**',
     redirectTo: '/signin'
