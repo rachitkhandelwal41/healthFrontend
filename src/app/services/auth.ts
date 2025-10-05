@@ -10,7 +10,7 @@ import { LoginRequest, LoginResponse, SignupRequest, SignupResponse, UserRole, A
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:1331/api/v1'; // Updated to your backend URL
+  private apiUrl = 'https://healthcare-backend-eight.vercel.app/api/v1'; // Updated to your backend URL
   private readonly ROLE_KEY = 'userRole';
   private readonly USER_KEY = 'user';
 

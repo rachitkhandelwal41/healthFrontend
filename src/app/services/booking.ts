@@ -46,7 +46,7 @@ export interface ApiResponse<T> {
   providedIn: 'root'
 })
 export class BookingService {
-  private baseUrl = 'http://localhost:1331/api/v1';
+  private baseUrl = 'https://healthcare-backend-eight.vercel.app/api/v1';
 
   constructor(private http: HttpClient) {}
 
