@@ -1,0 +1,399 @@
+<!-- app/components/admin-dashboard/admin-dashboard.html -->
+
+<div class="min-h-screen bg-gray-50 flex">
+  <!-- Sidebar -->
+  <aside class="w-64 bg-white shadow-lg fixed h-full">
+    <div class="p-6">
+      <div class="flex items-center space-x-3 mb-8">
+        <div class="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+          </svg>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-gray-900">Admin</h2>
+          <p class="text-sm text-gray-500">Dashboard</p>
+        </div>
+      </div>
+
+      <nav class="space-y-2">
+        <a href="#" class="flex items-center px-4 py-3 text-gray-700 bg-red-50 rounded-lg">
+          <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+          </svg>
+          Overview
+        </a>
+      </nav>
+    </div>
+
+    <div class="absolute bottom-0 w-64 p-6">
+      <button (click)="logout()" class="w-full flex items-center justify-center px-4 py-3 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition duration-200">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+        </svg>
+        Logout
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 ml-64 p-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+      <p class="text-gray-600 mt-2">Manage departments and doctors</p>
+    </div>
+
+    <!-- Success/Error Messages -->
+    <div *ngIf="successMessage" class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+      <div class="flex items-center">
+        <svg class="w-5 h-5 text-green-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+        </svg>
+        <p class="text-sm text-green-800">{{ successMessage }}</p>
+      </div>
+    </div>
+
+    <div *ngIf="errorMessage" class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+      <div class="flex items-center">
+        <svg class="w-5 h-5 text-red-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+        </svg>
+        <p class="text-sm text-red-800">{{ errorMessage }}</p>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="mb-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <button (click)="openCreateDepartmentModal()" class="flex items-center justify-center px-6 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition duration-200 shadow">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        Create Department
+      </button>
+      <button (click)="openCreateDoctorModal()" class="flex items-center justify-center px-6 py-4 bg-green-600 hover:bg-green-700 text-white rounded-lg transition duration-200 shadow">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        Create Doctor
+      </button>
+    </div>
+
+    <!-- Departments and Doctors List -->
+    <div class="space-y-6">
+      <div *ngFor="let dept of departments" class="bg-white rounded-xl shadow">
+        <!-- Department Header -->
+        <div class="p-6 border-b border-gray-200 bg-gradient-to-r from-indigo-50 to-blue-50">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-2xl font-bold text-gray-900">{{ dept.name }}</h2>
+              <p class="text-sm text-gray-600 mt-1">{{ getDoctorsByDepartment(dept.name).length }} doctors</p>
+            </div>
+            <div class="flex space-x-2">
+              <button (click)="openEditDepartmentModal(dept)" class="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition duration-200">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                </svg>
+              </button>
+              <button (click)="deleteDepartment(dept.dept_id, dept.name)" class="p-2 text-red-600 hover:bg-red-100 rounded-lg transition duration-200">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Doctors in Department -->
+        <div class="p-6">
+          <div *ngIf="getDoctorsByDepartment(dept.name).length === 0" class="text-center py-8 text-gray-500">
+            <svg class="w-12 h-12 mx-auto mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+            </svg>
+            <p>No doctors in this department</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div *ngFor="let doctor of getDoctorsByDepartment(dept.name)" class="p-4 bg-gray-50 rounded-lg border border-gray-200 hover:shadow-md transition duration-200">
+              <div class="flex items-start justify-between mb-3">
+                <div class="flex items-center space-x-3">
+                  <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold">
+                    {{ doctor.name.charAt(0) }}
+                  </div>
+                  <div>
+                    <h4 class="font-semibold text-gray-900">Dr. {{ doctor.name }}</h4>
+                    <p class="text-sm text-blue-600">{{ doctor.specialization }}</p>
+                  </div>
+                </div>
+                <div class="flex space-x-1">
+                  <button (click)="openEditDoctorModal(doctor)" class="p-1 text-blue-600 hover:bg-blue-100 rounded transition duration-200">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                  </button>
+                  <button (click)="deleteDoctor(doctor._id, doctor.name)" class="p-1 text-red-600 hover:bg-red-100 rounded transition duration-200">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div class="space-y-1 text-sm text-gray-600">
+                <div class="flex items-center">
+                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                  </svg>
+                  {{ doctor.email }}
+                </div>
+                <div class="flex items-center">
+                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                  </svg>
+                  {{ doctor.phone }}
+                </div>
+                <div class="flex items-center">
+                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  {{ doctor.availability }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="departments.length === 0 && !isLoading" class="bg-white rounded-xl shadow p-12 text-center">
+        <svg class="w-16 h-16 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+        </svg>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">No Departments Yet</h3>
+        <p class="text-gray-600 mb-6">Get started by creating your first department</p>
+        <button (click)="openCreateDepartmentModal()" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition duration-200">
+          Create Department
+        </button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Department Modal -->
+<div *ngIf="showDepartmentModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+  <div class="bg-white rounded-xl shadow-2xl max-w-md w-full">
+    <div class="p-6 border-b border-gray-200">
+      <h3 class="text-2xl font-bold text-gray-900">{{ isEditMode ? 'Edit Department' : 'Create Department' }}</h3>
+    </div>
+    <div class="p-6">
+      <form (ngSubmit)="saveDepartment()">
+        <div class="mb-4">
+          <label for="deptName" class="block text-sm font-medium text-gray-700 mb-2">
+            Department Name
+          </label>
+          <input
+            type="text"
+            id="deptName"
+            [(ngModel)]="departmentForm.name"
+            name="deptName"
+            required
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 outline-none"
+            placeholder="e.g., Cardiology"
+            [disabled]="isLoading"
+          />
+        </div>
+
+        <div *ngIf="errorMessage" class="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+          <p class="text-sm text-red-800">{{ errorMessage }}</p>
+        </div>
+
+        <div class="flex space-x-3">
+          <button
+            type="submit"
+            [disabled]="isLoading"
+            class="flex-1 bg-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed"
+          >
+            <span *ngIf="!isLoading">{{ isEditMode ? 'Update' : 'Create' }}</span>
+            <span *ngIf="isLoading">Saving...</span>
+          </button>
+          <button
+            type="button"
+            (click)="closeDepartmentModal()"
+            [disabled]="isLoading"
+            class="flex-1 bg-gray-200 text-gray-700 py-3 px-4 rounded-lg font-semibold hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition duration-200 disabled:cursor-not-allowed"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Doctor Modal -->
+<div *ngIf="showDoctorModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+  <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full my-8">
+    <div class="p-6 border-b border-gray-200">
+      <h3 class="text-2xl font-bold text-gray-900">{{ isEditMode ? 'Edit Doctor' : 'Create Doctor' }}</h3>
+    </div>
+    <div class="p-6">
+      <form (ngSubmit)="saveDoctor()">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Name -->
+          <div>
+            <label for="doctorName" class="block text-sm font-medium text-gray-700 mb-2">
+              Full Name *
+            </label>
+            <input
+              type="text"
+              id="doctorName"
+              [(ngModel)]="doctorForm.name"
+              name="doctorName"
+              required
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200 outline-none"
+              placeholder="Dr. John Doe"
+              [disabled]="isLoading"
+            />
+          </div>
+
+          <!-- Email -->
+          <div>
+            <label for="doctorEmail" class="block text-sm font-medium text-gray-700 mb-2">
+              Email *
+            </label>
+            <input
+              type="email"
+              id="doctorEmail"
+              [(ngModel)]="doctorForm.email"
+              name="doctorEmail"
+              required
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200 outline-none"
+              placeholder="doctor@hospital.com"
+              [disabled]="isLoading"
+            />
+          </div>
+
+          <!-- Phone -->
+          <div>
+            <label for="doctorPhone" class="block text-sm font-medium text-gray-700 mb-2">
+              Phone *
+            </label>
+            <input
+              type="tel"
+              id="doctorPhone"
+              [(ngModel)]="doctorForm.phone"
+              name="doctorPhone"
+              required
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200 outline-none"
+              placeholder="+1 (555) 123-4567"
+              [disabled]="isLoading"
+            />
+          </div>
+
+          <!-- Password -->
+          <div>
+            <label for="doctorPassword" class="block text-sm font-medium text-gray-700 mb-2">
+              Password {{ isEditMode ? '(leave blank to keep current)' : '*' }}
+            </label>
+            <input
+              type="password"
+              id="doctorPassword"
+              [(ngModel)]="doctorForm.password"
+              name="doctorPassword"
+              [required]="!isEditMode"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200 outline-none"
+              placeholder="••••••••"
+              [disabled]="isLoading"
+            />
+          </div>
+
+          <!-- Specialization -->
+          <div>
+            <label for="doctorSpecialization" class="block text-sm font-medium text-gray-700 mb-2">
+              Specialization *
+            </label>
+            <input
+              type="text"
+              id="doctorSpecialization"
+              [(ngModel)]="doctorForm.specialization"
+              name="doctorSpecialization"
+              required
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200 outline-none"
+              placeholder="Cardiologist"
+              [disabled]="isLoading"
+            />
+          </div>
+
+          <!-- Department -->
+          <div>
+            <label for="doctorDept" class="block text-sm font-medium text-gray-700 mb-2">
+              Department *
+            </label>
+            <select
+              id="doctorDept"
+              [(ngModel)]="doctorForm.deptName"
+              name="doctorDept"
+              required
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200 outline-none"
+              [disabled]="isLoading"
+            >
+              <option value="">Select Department</option>
+              <option *ngFor="let dept of departments" [value]="dept.name">{{ dept.name }}</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Availability (Full Width) -->
+        <div class="mt-4">
+          <label for="doctorAvailability" class="block text-sm font-medium text-gray-700 mb-2">
+            Availability *
+          </label>
+          <input
+            type="text"
+            id="doctorAvailability"
+            [(ngModel)]="doctorForm.availability"
+            name="doctorAvailability"
+            required
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200 outline-none"
+            placeholder="MON-FRI 10am-6pm"
+            [disabled]="isLoading"
+          />
+          <p class="text-xs text-gray-500 mt-1">Example: MON-FRI 10am-6pm or MON,WED,FRI 9am-5pm</p>
+        </div>
+
+        <div *ngIf="errorMessage" class="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+          <p class="text-sm text-red-800">{{ errorMessage }}</p>
+        </div>
+
+        <div class="flex space-x-3 mt-6">
+          <button
+            type="submit"
+            [disabled]="isLoading"
+            class="flex-1 bg-green-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed"
+          >
+            <span *ngIf="!isLoading">{{ isEditMode ? 'Update Doctor' : 'Create Doctor' }}</span>
+            <span *ngIf="isLoading">Saving...</span>
+          </button>
+          <button
+            type="button"
+            (click)="closeDoctorModal()"
+            [disabled]="isLoading"
+            class="flex-1 bg-gray-200 text-gray-700 py-3 px-4 rounded-lg font-semibold hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition duration-200 disabled:cursor-not-allowed"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Loading Overlay -->
+<div *ngIf="isLoading" class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-40">
+  <div class="bg-white rounded-lg p-6 shadow-xl">
+    <svg class="animate-spin h-10 w-10 text-blue-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    </svg>
+    <p class="text-gray-700 mt-3 text-center">Loading...</p>
+  </div>
+</div>

@@ -1,0 +1,168 @@
+<div class="min-h-screen bg-gray-50 p-4">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+      <h1 class="text-3xl font-bold text-gray-800">Patient Dashboard</h1>
+      <p class="text-gray-600 mt-2">Book and manage your appointments</p>
+    </div>
+
+    <!-- Alert Messages -->
+    <div *ngIf="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+      {{ error }}
+    </div>
+    <div *ngIf="success" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+      {{ success }}
+    </div>
+
+    <!-- Tabs -->
+    <div class="bg-white rounded-lg shadow-md mb-6">
+      <div class="border-b border-gray-200">
+        <div class="flex">
+          <button 
+            (click)="switchTab('book')"
+            [class.border-b-2]="activeTab === 'book'"
+            [class.border-blue-500]="activeTab === 'book'"
+            [class.text-blue-600]="activeTab === 'book'"
+            class="px-6 py-3 font-medium text-gray-600 hover:text-blue-600">
+            Book Appointment
+          </button>
+          <button 
+            (click)="switchTab('appointments')"
+            [class.border-b-2]="activeTab === 'appointments'"
+            [class.border-blue-500]="activeTab === 'appointments'"
+            [class.text-blue-600]="activeTab === 'appointments'"
+            class="px-6 py-3 font-medium text-gray-600 hover:text-blue-600">
+            My Appointments
+          </button>
+        </div>
+      </div>
+
+      <!-- Book Appointment Tab -->
+      <div *ngIf="activeTab === 'book'" class="p-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <!-- Department Selection -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Department</label>
+            <select 
+              [(ngModel)]="selectedDepartment" 
+              (change)="onDepartmentChange()"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+              <option value="">Select Department</option>
+              <option *ngFor="let dept of departments" [value]="dept.name">
+                {{ dept.name }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Date Selection -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+            <input 
+              type="date" 
+              [(ngModel)]="selectedDate"
+              (change)="onDateChange()"
+              [min]="selectedDate"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+          </div>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div *ngIf="loading" class="flex justify-center py-8">
+          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+        </div>
+
+        <!-- Available Doctors -->
+        <div *ngIf="!loading && doctors.length > 0" class="mb-6">
+          <h3 class="text-xl font-semibold text-gray-800 mb-4">Available Doctors</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div 
+              *ngFor="let doctor of doctors"
+              (click)="selectDoctor(doctor)"
+              [class.ring-2]="selectedDoctor?.doctor_id === doctor.doctor_id"
+              [class.ring-blue-500]="selectedDoctor?.doctor_id === doctor.doctor_id"
+              class="bg-white border border-gray-200 rounded-lg p-4 cursor-pointer hover:shadow-lg transition-shadow">
+              <h4 class="font-semibold text-gray-800">{{ doctor.name }}</h4>
+              <p class="text-sm text-gray-600 mt-1">{{ doctor.specialization }}</p>
+              <p class="text-sm text-gray-500 mt-2">{{ doctor.availability }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Time Slots -->
+        <div *ngIf="selectedDoctor" class="mb-6">
+          <h3 class="text-xl font-semibold text-gray-800 mb-4">Select Time Slot</h3>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <button
+              *ngFor="let slot of slots"
+              (click)="selectSlot(slot.value)"
+              [class.bg-blue-500]="selectedSlot === slot.value"
+              [class.text-white]="selectedSlot === slot.value"
+              [class.bg-white]="selectedSlot !== slot.value"
+              class="border border-gray-300 px-4 py-3 rounded-lg hover:border-blue-500 transition-colors">
+              {{ slot.time }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Book Button -->
+        <div *ngIf="selectedDoctor && selectedSlot !== null">
+          <button 
+            (click)="bookAppointment()"
+            [disabled]="loading"
+            class="w-full md:w-auto bg-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed">
+            {{ loading ? 'Booking...' : 'Book Appointment' }}
+          </button>
+        </div>
+      </div>
+
+      <!-- My Appointments Tab -->
+      <div *ngIf="activeTab === 'appointments'" class="p-6">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">My Appointments</h3>
+        
+        <div *ngIf="myAppointments.length === 0" class="text-center py-8 text-gray-500">
+          No appointments found
+        </div>
+
+        <div class="space-y-4">
+          <div 
+            *ngFor="let appointment of myAppointments"
+            class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+            <div class="flex justify-between items-start">
+              <div class="flex-1">
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="font-semibold text-gray-800">Doctor:</span>
+                  <span class="text-gray-600">{{ appointment.doctorName || 'N/A' }}</span>
+                </div>
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="font-semibold text-gray-800">Date:</span>
+                  <span class="text-gray-600">{{ appointment.date }}</span>
+                </div>
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="font-semibold text-gray-800">Time:</span>
+                  <span class="text-gray-600">{{ appointment.time || getSlotTime(appointment.slot) }}</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="font-semibold text-gray-800">Status:</span>
+                  <span 
+                    [class.text-green-600]="appointment.status === 'BOOKED'"
+                    [class.text-red-600]="appointment.status === 'CANCELLED'"
+                    class="font-medium">
+                    {{ appointment.status }}
+                  </span>
+                </div>
+              </div>
+              
+              <button
+                *ngIf="appointment.status === 'BOOKED'"
+                (click)="cancelAppointment(appointment._id)"
+                [disabled]="loading"
+                class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 disabled:bg-gray-400 disabled:cursor-not-allowed">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

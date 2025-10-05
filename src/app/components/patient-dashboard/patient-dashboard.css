@@ -1,0 +1,67 @@
+/* app/components/patient-dashboard/patient-dashboard.css */
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Animation for modal */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Card hover effects */
+.hover\:shadow-lg {
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+/* Loading spinner animation is already handled by Tailwind's animate-spin */
+
+/* Custom date input styling */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(0.5);
+}
+
+input[type="date"]:hover::-webkit-calendar-picker-indicator {
+  filter: invert(0.3);
+}
+
+/* Status badge animations */
+.status-badge {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Smooth transitions for all interactive elements */
+button,
+input,
+select {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a0aec0;
+}
