@@ -18,7 +18,7 @@ export interface Doctor {
 }
 
 export interface Appointment {
-  _id: string;
+  id: string;
   doctorId: string;
   patientId: string;
   date: string;
@@ -26,6 +26,11 @@ export interface Appointment {
   time?: string;
   status: string;
   createdAt?: string;
+  doctor: {
+    user: {
+      name: string;
+    };
+  };
 }
 
 export interface ApiResponse<T> {
@@ -104,7 +109,7 @@ export class BookingService {
   }
 
   getMyAppointments(patientId: string): Observable<Appointment[]> {
-    return this.http.get<any>(`${this.baseUrl}/appointments/${patientId}`, {
+    return this.http.get<any>(`${this.baseUrl}/patient/appointment`, {
       withCredentials: true
     }).pipe(
       map(response => {
@@ -120,9 +125,8 @@ export class BookingService {
   }
 
   cancelAppointment(appointmentId: string): Observable<ApiResponse<any>> {
-    return this.http.patch<ApiResponse<any>>(
-      `${this.baseUrl}/appointments/${appointmentId}/cancel`,
-      {},
+    return this.http.delete<ApiResponse<any>>(
+      `${this.baseUrl}/appointments/${appointmentId}`,
       { withCredentials: true }
     );
   }

@@ -148,7 +148,7 @@
               <div class="flex-1">
                 <div class="flex items-center gap-2 mb-2">
                   <span class="font-semibold text-gray-800">Doctor:</span>
-                  <span class="text-gray-600">{{ appointment.doctorName || 'N/A' }}</span>
+                  <span class="text-gray-600">{{ appointment.name || 'N/A' }}</span>
                 </div>
                 <div class="flex items-center gap-2 mb-2">
                   <span class="font-semibold text-gray-800">Date:</span>
@@ -171,7 +171,7 @@
 
               <button
                 *ngIf="appointment.status === 'BOOKED'"
-                (click)="cancelAppointment(appointment._id)"
+                (click)="cancelAppointment(appointment.id)"
                 [disabled]="loading"
                 class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 disabled:bg-gray-400 disabled:cursor-not-allowed">
                 Cancel

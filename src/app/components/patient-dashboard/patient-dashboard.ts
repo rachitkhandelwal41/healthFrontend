@@ -8,7 +8,7 @@ import { AuthService } from '../../services/auth';
 
 // Extend Appointment for local use
 interface AppointmentWithDoctorName extends Appointment {
-  doctorName?: string;
+  name?: string;
 }
 
 @Component({
@@ -136,7 +136,7 @@ export class PatientDashboardComponent implements OnInit {
         console.log('Doctors loaded:', doctors);
 
         if (this.doctors.length === 0) {
-          this.error = 'No doctors available for selected department and date';
+          this.error = 'No doctors available for selected department and date. Try a different date or department.';
         }
       },
       error: (err) => {
@@ -227,8 +227,10 @@ export class PatientDashboardComponent implements OnInit {
       next: (appointments) => {
         // Map doctorName onto each appointment
         this.myAppointments = appointments.map(appt => {
-          const doc = this.allDoctors.find(d => d._id === appt.doctorId || d.doctor_id === appt.doctorId);
-          return { ...appt, doctorName: doc ? doc.name : undefined };
+          const doc = {
+            name: appt.doctor.user.name,
+          }
+          return { ...appt, name: doc ? doc.name : undefined };
         });
         console.log('Appointments loaded:', appointments);
       },
